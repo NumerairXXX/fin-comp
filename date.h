@@ -9,14 +9,13 @@ public:
 	int GetYear() const;
 	int GetMonth() const;
 	int GetDay() const;
-	int SetYear(int y);
-	int SetMonth(int m);
-	int SetDay(int d);
+	void SetYear(int y);
+	void SetMonth(int m);
+	void SetDay(int d);
 	bool operator>(const Date obj) const;
 	bool operator<(const Date obj) const;
 	bool operator==(const Date obj) const;
 	void operator=(const Date obj);
-	Date &date_modifier(const Date obj, int shift);
 private:
 	int year;
 	int month;

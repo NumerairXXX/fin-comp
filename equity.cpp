@@ -14,11 +14,11 @@ Date Equity::GetEndDate() {
 }
 
 Date ETF::GetStartDate() {
-
+	return start_date;
 }
 
 Date ETF::GetEndDate() {
-
+	return end_date;
 }
 
 Date Stock::GetRepDate() {

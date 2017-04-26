@@ -1,7 +1,7 @@
-#include "date.h";
-#include <iostream>;
-#include <map>;
-#include<vector>;
+#include "date.h"
+#include <iostream>
+#include <map>
+#include<vector>
 
 int Date::GetYear() const {
 	return year;
@@ -13,13 +13,13 @@ int Date::GetDay() const{
 	return day;
 }
 
-int Date::SetYear(int y) {
+void Date::SetYear(int y) {
 	year = y;
 }
-int Date::SetMonth(int m) {
+void Date::SetMonth(int m) {
 	month = m;
 }
-int Date::SetDay(int d) {
+void Date::SetDay(int d) {
 	day = d;
 }
 

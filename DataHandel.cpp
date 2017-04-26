@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include<stack>
 using namespace std;
 
 vector<Stock>& AllStock(string filename) {
@@ -108,9 +109,9 @@ string web_generator(Stock stk) {
 	//"http://ichart.yahoo.com/table.csv?s=AAPL&a=00&b=1&c=2010&d=03&e=25&f=2015&g=w&ignore=.csv");
 	//combine sevearl strings together
 	stringstream ss;
-	int stk_y = stk.GetRepDate.year;
-	int stk_m = stk.GetRepDate.month;
-	int stk_d = stk.GetRepDate.day;
+	static int stk_y = stk.GetRepDate.GetYear;
+	static int stk_m = stk.GetRepDate.GetMonth;
+	static int stk_d = stk.GetRepDate.GetDay;
 	/*if report month <= 3, year before shift back one too. when month is between 4 and 10, everything is normal, we just take 
 	start date as 4 months before, end date as two months later. when month > 10, year after need to move forward one*/
 	if (stk_m <= 3) 
@@ -130,11 +131,11 @@ static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *use
 	return size * nmemb;
 }
 
-int nothingto(Stock stk){
+map<Date,double>& price_getter(Stock stk){
 	string readBuffer;
-	vector<string> date;
-	vector<double> adj;
-
+	stack<string> date;
+	stack<double> adj;
+	map<Date, double> ret;
 		// declaration of an object CURL, initialization, set result variable.
 	CURL *handle;
 	CURLcode result;
@@ -158,13 +159,13 @@ int nothingto(Stock stk){
 		if (result != CURLE_OK)
 		{
 			fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(result));
-			return 1;
+			//print 1;
 		}
 	}
 	else
 	{
 		fprintf(stderr, "Curl init failed!\n");
-		return 1;
+		//return 1;
 	}
 	//clean up
 	curl_easy_cleanup(handle);
@@ -175,21 +176,22 @@ int nothingto(Stock stk){
 	string token;
 	getline(ss, token, '\n');
 	while (getline(ss, token, '\n')) {
-		date.push_back(token.substr(0, 10));
-		adj.push_back(stod(token.substr(token.find_last_of(',') + 1, token.back())));
+		date.push(token.substr(0, 10));
+		adj.push(stod(token.substr(token.find_last_of(',') + 1, token.back())));
 	}
 
 	//fill up map<Date, double> which represent date and price.
-	for (int i = 0;i < date.size();i++) {
-
+	while (!date.empty()) {
+		cout << date.top() << endl;
+		date.pop();
 	}
 
 	//map manipulation, find report date then get the previous 60 only and after 30 only.
-	//your code here
+	
 
 	// make the program stop for avoiding the console closing before we can see anything
 	system("PAUSE");
-	return 0;
+	//return 0;
 }
 
 
