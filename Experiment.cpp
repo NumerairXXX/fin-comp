@@ -29,7 +29,8 @@ bool Experiment::SetThreshold(double t_h) {
 	if (t_h <= 10 && t_h >= 5) {
 		threshold = t_h;
 		return true;
-	} else {
+	}
+	else {
 		return false;
 	}
 }
@@ -58,10 +59,12 @@ bool Experiment::UpdateGroups(const std::map<std::string, Stock>& allstocks_) {
 		if (i->second.GetSurprise() > threshold) {
 			//Beat
 			big_groups[0].PushStock(i->second);
-		} else if (i->second.GetSurprise() < -threshold) {
+		}
+		else if (i->second.GetSurprise() < -threshold) {
 			//Miss
 			big_groups[2].PushStock(i->second);
-		} else {
+		}
+		else {
 			//Meet
 			big_groups[1].PushStock(i->second);
 		}
@@ -69,19 +72,18 @@ bool Experiment::UpdateGroups(const std::map<std::string, Stock>& allstocks_) {
 	return true;
 }
 
-bool Experiment::DoExperiment() { // Wrong logic. Please see pseudo code and fix it
-	Group SubGroup = Sampling(big_groups[0]);
-	SubGroup.Compute();
-	for (int i = 0; i < 91; i++) {
-		AAR_avg[0][i] = SubGroup.GetAAR()[i];
-		CAAR_avg[0][i] = SubGroup.GetCAAR()[i];
-	}
-	for (int i = 1; i < resample_times; ++i) {
-		SubGroup = Sampling(big_groups[i]);
-		SubGroup.Compute();
-		for (int j = 0; i < 91; j++) {
-			AAR_avg[i][j] = SubGroup.GetAAR()[j];
-			CAAR_avg[i][j] = SubGroup.GetCAAR()[j];
+bool Experiment::DoExperiment() {
+	Group SubGroup;
+	std::vector<double> AAR = SubGroup.GetAAR();
+	std::vector<double> CAAR = SubGroup.GetCAAR();
+	for (int i = 0; i < resample_times; ++i) {
+		for (int j = 0; j < 3; ++j) {
+			SubGroup = Sampling(big_groups[j]);
+			SubGroup.Compute();
+			for (int k = 0; k < 91; ++k) {
+				AAR_avg(j, k) = (AAR_avg(j, k) * i + AAR[j]) / (i + 1);
+				CAAR_avg(j, k) = (AAR_avg(j, k) * i + CAAR[j]) / (i + 1);
+			}
 		}
 	}
 }
