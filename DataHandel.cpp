@@ -133,7 +133,7 @@ static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *use
 
 map<Date,double>& price_getter(Stock stk){
 	string readBuffer;
-	stack<string> date;
+	stack<Date> date;
 	stack<double> adj;
 	map<Date, double> ret;
 		// declaration of an object CURL, initialization, set result variable.
@@ -171,24 +171,44 @@ map<Date,double>& price_getter(Stock stk){
 	curl_easy_cleanup(handle);
 	curl_global_cleanup();
 
+	Date target = stk.GetRepDate();
+	int count_push = 0;
+	int count_pop = 0;
 	//string manipulation. We seperated string by EOF then take substrings of what we need. 
 	istringstream ss(readBuffer);
 	string token;
 	getline(ss, token, '\n');
 	while (getline(ss, token, '\n')) {
-		date.push(token.substr(0, 10));
-		adj.push(stod(token.substr(token.find_last_of(',') + 1, token.back())));
+		Date cur;
+		string temp = token.substr(0, 10);
+		cur.SetYear(stoi(temp.substr(0, 4)));
+		cur.SetMonth(stoi(temp.substr(5, 6)));
+		cur.SetYear(stoi(temp.substr(8, 9)));
+		if(cur > target || cur == target){
+			date.push(cur);
+			adj.push(stod(token.substr(token.find_last_of(',') + 1, token.back())));
+		}
+		else if(cur < target && count_push < 60) {
+			date.push(cur);
+			adj.push(stod(token.substr(token.find_last_of(',') + 1, token.back())));
+			count_push += 1;
+		}
 	}
 
 	//fill up map<Date, double> which represent date and price.
 	while (!date.empty()) {
-		cout << date.top() << endl;
-		date.pop();
+		if (date.top() < target || date.top() == target) {
+			ret[date.top()] = adj.top();
+			date.pop();
+			adj.pop();
+		}
+		else if (date.top() > target && count_pop < 30) {
+			ret[date.top()] = adj.top();
+			date.pop();
+			adj.pop();
+			count_pop += 1;
+		}
 	}
-
-	//map manipulation, find report date then get the previous 60 only and after 30 only.
-	
-
 	// make the program stop for avoiding the console closing before we can see anything
 	system("PAUSE");
 	//return 0;

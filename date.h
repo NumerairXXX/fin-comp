@@ -16,6 +16,7 @@ public:
 	bool operator<(const Date obj) const;
 	bool operator==(const Date obj) const;
 	void operator=(const Date obj);
+	friend map<Date, double>& price_getter(Stock stk);
 private:
 	int year;
 	int month;
