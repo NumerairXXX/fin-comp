@@ -109,14 +109,14 @@ string web_generator(Stock stk) {
 	//"http://ichart.yahoo.com/table.csv?s=AAPL&a=00&b=1&c=2010&d=03&e=25&f=2015&g=w&ignore=.csv");
 	//combine sevearl strings together
 	stringstream ss;
-	static int stk_y = stk.GetRepDate.GetYear;
-	static int stk_m = stk.GetRepDate.GetMonth;
-	static int stk_d = stk.GetRepDate.GetDay;
+	int stk_y = (stk.GetRepDate()).GetYear();
+	int stk_m = (stk.GetRepDate()).GetMonth();
+	int stk_d = (stk.GetRepDate()).GetDay();
 	/*if report month <= 3, year before shift back one too. when month is between 4 and 10, everything is normal, we just take 
 	start date as 4 months before, end date as two months later. when month > 10, year after need to move forward one*/
 	if (stk_m <= 3) 
 		ss << fixed << "http://ichart.yahoo.com/table.csv?" << stk.ticker << "&a=" << converter(stk_m + 9) << "&b=" << "28" << "&c=" << converter(stk_y-1) << "&d=" << converter(stk_m + 2) << "e=" << "28" << "f=" << converter(stk_y) << "g=w&ignore=.csv";
-	else if (4 <= stk_m < 10) 
+	else if (stk_m >= 4 && stk_m < 10) 
 		ss << fixed << "http://ichart.yahoo.com/table.csv?" << stk.ticker << "&a=" << converter(stk_m - 3) << "&b=" << "28" << "&c=" << converter(stk_y) << "&d=" << converter(stk_m + 2) << "e=" << "28" << "f=" << converter(stk_y) << "g=w&ignore=.csv";
 	else if (stk_m >= 10) 
 		ss << fixed << "http://ichart.yahoo.com/table.csv?" << stk.ticker << "&a=" << converter(stk_m - 3) << "&b=" << "28" << "&c=" << converter(stk_y) << "&d=" << converter(stk_m - 9) << "e=" << "28" << "f=" << converter(stk_y + 1) << "g=w&ignore=.csv";
@@ -212,6 +212,7 @@ map<Date,double>& price_getter(Stock stk){
 	// make the program stop for avoiding the console closing before we can see anything
 	system("PAUSE");
 	//return 0;
+	return ret;
 }
 
 

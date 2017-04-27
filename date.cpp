@@ -3,26 +3,6 @@
 #include <map>
 #include<vector>
 
-int Date::GetYear() const {
-	return year;
-}
-int Date::GetMonth() const{
-	return month;
-}
-int Date::GetDay() const{
-	return day;
-}
-
-void Date::SetYear(int y) {
-	year = y;
-}
-void Date::SetMonth(int m) {
-	month = m;
-}
-void Date::SetDay(int d) {
-	day = d;
-}
-
 
 //we call it greater than the other when it's further. E.g:  2017/5/13 > 2016/8/15 returns true
 bool Date::operator>(const Date obj) const{
@@ -75,4 +55,24 @@ void Date::operator=(const Date obj) {
 	(*this).year = obj.year;
 	(*this).month = obj.month;
 	(*this).day = obj.day;
+}
+
+int Date::GetYear() const {
+	return year;
+}
+int Date::GetMonth() const {
+	return month;
+}
+int Date::GetDay() const {
+	return day;
+}
+
+void Date::SetYear(int y) {
+	year = y;
+}
+void Date::SetMonth(int m) {
+	month = m;
+}
+void Date::SetDay(int d) {
+	day = d;
 }

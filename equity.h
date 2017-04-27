@@ -10,8 +10,8 @@ using namespace std;
 
 class Equity {
 public: 
-	virtual Date GetStartDate();
-	virtual Date GetEndDate();
+	Date GetStartDate();
+	Date GetEndDate();
 private: 
 	string ticker;
 	Date start_date;
@@ -22,8 +22,6 @@ private:
 
 class ETF : public Equity {
 public:
-	Date GetStartDate();
-	Date GetEndDate();
 	Date start_date;
 	Date end_date;
 private:
