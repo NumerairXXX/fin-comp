@@ -7,25 +7,24 @@
 #include <vector>
 #include <sstream>
 #include<stack>
-using namespace std;
 
 void AllStock() {
 	//stock pool. with infomation listed below.
-	string ticker;
-	string date;
+	std::string ticker;
+	std::string date;
 	double surp;
 	int y;
 	int m;
 	int d;
-	string sec_name;
-	string comp_sector;
-	string comp_subsec;
-	string addr;
+	std::string sec_name;
+	std::string comp_sector;
+	std::string comp_subsec;
+	std::string addr;
 	int cik_name;
 
 	//read file
 	ifstream file("wen jian ming shi shen me ni men yao gai");
-	string line;
+	std::string line;
 	//skip header
 	getline(file, line);
 
@@ -34,8 +33,8 @@ void AllStock() {
 	/* note here, we cannot use file.good() or !file.eof() because the last line's eof will be ingored.
 	in order to prevent that from happending, use getline for logic, so below, we read the parsed line
 	and store info accordingly. */
-		istringstream iss(line);
-		string token;
+		std::istringstream iss(line);
+		std::string token;
 		//store info
 		getline(iss, token, ',');
 		ticker = token;
@@ -58,7 +57,7 @@ void AllStock() {
 		d = stoi(token);
 
 		//url_generator
-		string cur_url = url_generator(ticker, y, m, d);
+		std::string cur_url = url_generator(ticker, y, m, d);
 
 		getline(iss, token, ',');
 		sec_name = token;
@@ -79,10 +78,10 @@ void AllStock() {
 		map<Date, double> cur_price, cur_ret;
 		Date cur_start, cur_end;
 		Date cur_rep_date(y, m, d);
-		price_getter(ticker, y, m, d, cur_price, cur_ret);
+		price_getter(ticker, y, m, d, cur_price, cur_ret,cur_start,cur_end);
 			//stock constructor with p
 		Stock cur_stock(ticker, cur_start,cur_end,cur_rep_date, cur_price,cur_ret,sec_name, comp_sector.
-						comp_subsec, addr, cik_name);
+						comp_subsec, addr, cik_name,surp);
 		all_stocks.push_back(cur_stock);
 	}
 	//close file
@@ -90,18 +89,18 @@ void AllStock() {
 }
 
 //convert some month or days with single digit to two digits string starting with 0, convert other months to strings directly
-string converter(int a) {
-	stringstream s;
+std::string converter(int a) {
+	std::stringstream s;
 	if (a < 10) s << 0 << a;
 	else s << a;
-	string ret = s.str();
+	std::string ret = s.str();
 	return ret;
 }
 
-string url_generator(string stk, int year, int month, int day) {
+std::string url_generator(std::string stk, int year, int month, int day) {
 	//"http://ichart.yahoo.com/table.csv?s=AAPL&a=00&b=1&c=2010&d=03&e=25&f=2015&g=w&ignore=.csv");
 	//combine sevearl strings together
-	stringstream ss;
+	std::stringstream ss;
 	/*if report month <= 3, year before shift back one too. when month is between 4 and 10, everything is normal, we just take 
 	start date as 4 months before, end date as two months later. when month > 10, year after need to move forward one*/
 	if (month <= 3) 
@@ -110,18 +109,18 @@ string url_generator(string stk, int year, int month, int day) {
 		ss << fixed << "http://ichart.yahoo.com/table.csv?" << stk << "&a=" << converter(month - 3) << "&b=" << "28" << "&c=" << converter(year) << "&d=" << converter(month + 2) << "e=" << "28" << "f=" << converter(year) << "g=w&ignore=.csv";
 	else if (month >= 10) 
 		ss << fixed << "http://ichart.yahoo.com/table.csv?" << stk << "&a=" << converter(month - 3) << "&b=" << "28" << "&c=" << converter(year) << "&d=" << converter(month - 9) << "e=" << "28" << "f=" << converter(year + 1) << "g=w&ignore=.csv";
-	string s = ss.str();
+	std::string s = ss.str();
 	return s;
 }
 
 static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
 {
-	((string*)userp)->append((char*)contents, size * nmemb);
+	((std::string*)userp)->append((char*)contents, size * nmemb);
 	return size * nmemb;
 }
 
-void price_getter(string stk, int year, int month, int day, map<Date,double>& price, map<Date, double>& ret, Date start_date, Date end_date){
-	string readBuffer;
+void price_getter(std::string stk, int year, int month, int day, map<Date,double>& price, map<Date, double>& ret, Date start_date, Date end_date){
+	std::string readBuffer;
 	stack<Date> date;
 	stack<double> adj;
 
@@ -166,11 +165,11 @@ void price_getter(string stk, int year, int month, int day, map<Date,double>& pr
 	int count_pop = 0;
 
 	//string manipulation. We seperated string by EOF then take substrings of what we need. 
-	istringstream ss(readBuffer);
-	string token;
+	std::istringstream ss(readBuffer);
+	std::string token;
 	getline(ss, token, '\n');
 	while (getline(ss, token, '\n')) {
-		string temp = token.substr(0, 10);
+		std::string temp = token.substr(0, 10);
 		int cur_year = stoi(temp.substr(0, 4));
 		int cur_month = stoi(temp.substr(5, 6));
 		int cur_day = stoi(temp.substr(8, 9));
