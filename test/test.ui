@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>testClass</class>
+ <widget class="QWidget" name="testClass">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>955</width>
+    <height>679</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Financial Computing Project</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="0" column="1">
+    <widget class="QPushButton" name="okButton">
+     <property name="text">
+      <string>ok</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Threshold:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="thresholdEdit">
+       <property name="text">
+        <string>10</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>% (5%-10%).           </string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_3">
+       <property name="whatsThis">
+        <string>How many times we choose 40 stocks from each group to calculate AAR and CAAR</string>
+       </property>
+       <property name="text">
+        <string>Bootstraping Times:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="BootstrapingEdit">
+       <property name="whatsThis">
+        <string>How many times we choose 40 stocks from each group to calculate AAR and CAAR</string>
+       </property>
+       <property name="text">
+        <string>1</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="0" colspan="2">
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="stocksTab">
+      <attribute name="title">
+       <string>Stocks</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="1" column="2">
+        <widget class="QListWidget" name="stockInformationList"/>
+       </item>
+       <item row="0" column="0">
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>Ticker:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="stockEdit"/>
+         </item>
+         <item>
+          <widget class="QPushButton" name="searchButton">
+           <property name="text">
+            <string>search</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="1" column="0" colspan="2">
+        <widget class="QTableWidget" name="stocksTable">
+         <column>
+          <property name="text">
+           <string>Date</string>
+          </property>
+          <property name="toolTip">
+           <string comment="1"/>
+          </property>
+          <property name="whatsThis">
+           <string/>
+          </property>
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Price</string>
+          </property>
+          <property name="toolTip">
+           <string extracomment="2"/>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Daily Return</string>
+          </property>
+          <property name="whatsThis">
+           <string>3</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Abnormal Daily Return</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="groupsTab">
+      <attribute name="title">
+       <string>Groups</string>
+      </attribute>
+      <widget class="QPushButton" name="excelButton">
+       <property name="geometry">
+        <rect>
+         <x>820</x>
+         <y>490</y>
+         <width>91</width>
+         <height>91</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Get Graph 
+ in Excel</string>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="groupComboBox">
+       <property name="geometry">
+        <rect>
+         <x>110</x>
+         <y>10</y>
+         <width>131</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="currentText">
+        <string/>
+       </property>
+       <item>
+        <property name="text">
+         <string/>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Beat</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Meet</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Miss</string>
+        </property>
+       </item>
+      </widget>
+      <widget class="QLabel" name="label_5">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>10</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Choose Group:</string>
+       </property>
+      </widget>
+      <widget class="QTableWidget" name="groupTable">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>60</y>
+         <width>261</width>
+         <height>521</height>
+        </rect>
+       </property>
+       <column>
+        <property name="text">
+         <string>Ticker</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Surprise</string>
+        </property>
+       </column>
+      </widget>
+      <widget class="QCustomPlot" name="widget" native="true">
+       <property name="geometry">
+        <rect>
+         <x>389</x>
+         <y>59</y>
+         <width>481</width>
+         <height>391</height>
+        </rect>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QCustomPlot</class>
+   <extends>QWidget</extends>
+   <header>qcustomplot.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="test.qrc"/>
+ </resources>
+ <connections/>
+</ui>
