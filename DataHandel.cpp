@@ -9,24 +9,22 @@
 #include<stack>
 using namespace std;
 
-vector<Stock>& AllStock(string filename) {
+void AllStock() {
 	//stock pool. with infomation listed below.
-	vector<Stock> stocks(455);
-
-	vector<string> ticker;
-	vector<string> date;
-	vector<string> surp;
-	vector<string> y;
-	vector<string> m;
-	vector<string> d;
-	vector<string> sec_name;
-	vector<string> comp_sector;
-	vector<string> comp_subsec;
-	vector<string> addr;
-	vector<string> cik_list;
+	string ticker;
+	string date;
+	double surp;
+	int y;
+	int m;
+	int d;
+	string sec_name;
+	string comp_sector;
+	string comp_subsec;
+	string addr;
+	int cik_name;
 
 	//read file
-	ifstream file(filename);
+	ifstream file("wen jian ming shi shen me ni men yao gai");
 	string line;
 	//skip header
 	getline(file, line);
@@ -40,60 +38,55 @@ vector<Stock>& AllStock(string filename) {
 		string token;
 		//store info
 		getline(iss, token, ',');
-		ticker.push_back(token);
+		ticker = token;
 
 		getline(iss, token, ',');
-		date.push_back(token);
+		date = token;
 
 		//skip estimate and actuall
 
 		getline(iss, token, ',');
-		surp.push_back(token);
+		surp = stod(token);
 
 		getline(iss, token, ',');
-		y.push_back(token);
+		y = stoi(token);
 
 		getline(iss, token, ',');
-		m.push_back(token);
+		m = stoi(token);
 
 		getline(iss, token, ',');
-		d.push_back(token);
+		d = stoi(token);
+
+		//url_generator
+		string cur_url = url_generator(ticker, y, m, d);
 
 		getline(iss, token, ',');
-		sec_name.push_back(token);
+		sec_name = token;
 
 		getline(iss, token, ',');
-		comp_sector.push_back(token);
+		comp_sector = token;
 
 		getline(iss, token, ',');
-		comp_subsec.push_back(token);
+		comp_subsec = token;
 
 		getline(iss, token, ',');
-		addr.push_back(token);
+		addr = token;
 
 		getline(iss, token, ',');
-		cik_list.push_back(token);
+		cik_name = stoi(token);
+
+		//download price & calculat5e return
+		map<Date, double> cur_price, cur_ret;
+		Date cur_start, cur_end;
+		Date cur_rep_date(y, m, d);
+		price_getter(ticker, y, m, d, cur_price, cur_ret);
+			//stock constructor with p
+		Stock cur_stock(ticker, cur_start,cur_end,cur_rep_date, cur_price,cur_ret,sec_name, comp_sector.
+						comp_subsec, addr, cik_name);
+		all_stocks.push_back(cur_stock);
 	}
 	//close file
 	file.close();
-
-	//initialize stock properties
-	for (int i = 0;i < stocks.size();i++) {
-		//company information filling
-		stocks[i].ticker = ticker[i];
-		stocks[i].security = sec_name[i];
-		stocks[i].sector = comp_sector[i];
-		stocks[i].sub_industry = comp_subsec[i];
-		stocks[i].address = addr[i];
-		stocks[i].cik = stoi(cik_list[i]);
-		//date info filling
-		stocks[i].rep_date.SetYear(stoi(y[i]));
-		stocks[i].rep_date.SetMonth(stoi(m[i]));
-		stocks[i].rep_date.SetDay(stoi(d[i]));
-		//numerical filling
-		stocks[i].surprise = stod(surp[i]);
-	}
-	return stocks;
 }
 
 //convert some month or days with single digit to two digits string starting with 0, convert other months to strings directly
@@ -105,25 +98,21 @@ string converter(int a) {
 	return ret;
 }
 
-string web_generator(Stock stk) {
+string url_generator(string stk, int year, int month, int day) {
 	//"http://ichart.yahoo.com/table.csv?s=AAPL&a=00&b=1&c=2010&d=03&e=25&f=2015&g=w&ignore=.csv");
 	//combine sevearl strings together
 	stringstream ss;
-	int stk_y = (stk.GetRepDate()).GetYear();
-	int stk_m = (stk.GetRepDate()).GetMonth();
-	int stk_d = (stk.GetRepDate()).GetDay();
 	/*if report month <= 3, year before shift back one too. when month is between 4 and 10, everything is normal, we just take 
 	start date as 4 months before, end date as two months later. when month > 10, year after need to move forward one*/
-	if (stk_m <= 3) 
-		ss << fixed << "http://ichart.yahoo.com/table.csv?" << stk.ticker << "&a=" << converter(stk_m + 9) << "&b=" << "28" << "&c=" << converter(stk_y-1) << "&d=" << converter(stk_m + 2) << "e=" << "28" << "f=" << converter(stk_y) << "g=w&ignore=.csv";
-	else if (stk_m >= 4 && stk_m < 10) 
-		ss << fixed << "http://ichart.yahoo.com/table.csv?" << stk.ticker << "&a=" << converter(stk_m - 3) << "&b=" << "28" << "&c=" << converter(stk_y) << "&d=" << converter(stk_m + 2) << "e=" << "28" << "f=" << converter(stk_y) << "g=w&ignore=.csv";
-	else if (stk_m >= 10) 
-		ss << fixed << "http://ichart.yahoo.com/table.csv?" << stk.ticker << "&a=" << converter(stk_m - 3) << "&b=" << "28" << "&c=" << converter(stk_y) << "&d=" << converter(stk_m - 9) << "e=" << "28" << "f=" << converter(stk_y + 1) << "g=w&ignore=.csv";
+	if (month <= 3) 
+		ss << fixed << "http://ichart.yahoo.com/table.csv?" << stk << "&a=" << converter(month + 9) << "&b=" << "28" << "&c=" << converter(year-1) << "&d=" << converter(month + 2) << "e=" << "28" << "f=" << converter(year) << "g=w&ignore=.csv";
+	else if (month >= 4 && month < 10) 
+		ss << fixed << "http://ichart.yahoo.com/table.csv?" << stk << "&a=" << converter(month - 3) << "&b=" << "28" << "&c=" << converter(year) << "&d=" << converter(month + 2) << "e=" << "28" << "f=" << converter(year) << "g=w&ignore=.csv";
+	else if (month >= 10) 
+		ss << fixed << "http://ichart.yahoo.com/table.csv?" << stk << "&a=" << converter(month - 3) << "&b=" << "28" << "&c=" << converter(year) << "&d=" << converter(month - 9) << "e=" << "28" << "f=" << converter(year + 1) << "g=w&ignore=.csv";
 	string s = ss.str();
 	return s;
 }
-
 
 static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
 {
@@ -131,11 +120,11 @@ static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *use
 	return size * nmemb;
 }
 
-map<Date,double>& price_getter(Stock stk){
+void price_getter(string stk, int year, int month, int day, map<Date,double>& price, map<Date, double>& ret, Date start_date, Date end_date){
 	string readBuffer;
 	stack<Date> date;
 	stack<double> adj;
-	map<Date, double> ret;
+
 		// declaration of an object CURL, initialization, set result variable.
 	CURL *handle;
 	CURLcode result;
@@ -146,7 +135,7 @@ map<Date,double>& price_getter(Stock stk){
 	{
 		//use web_generator to generate stock info
 		//ATTENTION!! possible errors
-		curl_easy_setopt(handle, CURLOPT_URL, web_generator(stk));
+		curl_easy_setopt(handle, CURLOPT_URL, url_generator(stk, year, month,day));
 		//if not successful, follow redirection
 		curl_easy_setopt(handle, CURLOPT_FOLLOWLOCATION, 1L);
 		//important notice: this line is to skip certificate problem. if not added, perform cannot be run
@@ -171,19 +160,22 @@ map<Date,double>& price_getter(Stock stk){
 	curl_easy_cleanup(handle);
 	curl_global_cleanup();
 
-	Date target = stk.GetRepDate();
+	Date target(year, month, day);
+
 	int count_push = 0;
 	int count_pop = 0;
+
 	//string manipulation. We seperated string by EOF then take substrings of what we need. 
 	istringstream ss(readBuffer);
 	string token;
 	getline(ss, token, '\n');
 	while (getline(ss, token, '\n')) {
-		Date cur;
 		string temp = token.substr(0, 10);
-		cur.SetYear(stoi(temp.substr(0, 4)));
-		cur.SetMonth(stoi(temp.substr(5, 6)));
-		cur.SetYear(stoi(temp.substr(8, 9)));
+		int cur_year = stoi(temp.substr(0, 4));
+		int cur_month = stoi(temp.substr(5, 6));
+		int cur_day = stoi(temp.substr(8, 9));
+		Date cur(cur_year, cur_month, cur_day);
+		
 		if(cur > target || cur == target){
 			date.push(cur);
 			adj.push(stod(token.substr(token.find_last_of(',') + 1, token.back())));
@@ -195,24 +187,27 @@ map<Date,double>& price_getter(Stock stk){
 		}
 	}
 
+
 	//fill up map<Date, double> which represent date and price.
 	while (!date.empty()) {
 		if (date.top() < target || date.top() == target) {
-			ret[date.top()] = adj.top();
+			price[date.top()] = adj.top();
 			date.pop();
 			adj.pop();
 		}
 		else if (date.top() > target && count_pop < 30) {
-			ret[date.top()] = adj.top();
+			price[date.top()] = adj.top();
 			date.pop();
 			adj.pop();
 			count_pop += 1;
 		}
 	}
+
+	start_date = price.begin()->first;
+	end_date = price.end()->first;
 	// make the program stop for avoiding the console closing before we can see anything
 	system("PAUSE");
-	//return 0;
-	return ret;
+	return;
 }
 
 
