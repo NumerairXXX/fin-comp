@@ -14,9 +14,7 @@ We use 453 stocks to form our stock pool. After we divide them into 3 big groups
 ## Project Architechture
 With Qt as the frame, we have three subsystem: a multithreading DataHandle (process all data extracted from Yahoo Finance and companies' constituents information from Bloomberg), Core (sample data and store calculation), ExcelDriver (connect to Excel and display all calculation and plotting result).
 
-DataHandle by Jojo
-Core by Nick and Charles
-Qt by Ning and Minjie
+Qt by Ning and Minjie; DataHandle by Jojo; Core by Nick and Charles; 
 
 
 
