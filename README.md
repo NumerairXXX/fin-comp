@@ -1,4 +1,4 @@
-# fin-comp
+# Financial Computing
 fin comp final project
 Hooooray!
 
@@ -13,6 +13,10 @@ How? We divide the suprise factors into three groups: meet, beat (+5% to +10% de
 We use 453 stocks to form our stock pool. After we divide them into 3 big groups by their earning surprises, we randomly select 40 stocks with replacement and calculate their Average Abnormal Return (AAR) and Cumulative Average Abnormal Return (CAAR), for N resample times, and finally take the average.
 ## Project Architechture
 With Qt as the frame, we have three subsystem: a multithreading DataHandle (process all data extracted from Yahoo Finance and companies' constituents information from Bloomberg), Core (sample data and store calculation), ExcelDriver (connect to Excel and display all calculation and plotting result).
+
+DataHandle by Jojo
+Core by Nick and Charles
+Qt by Ning and Minjie
 
 
 
